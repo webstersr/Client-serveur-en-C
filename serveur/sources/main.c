@@ -1,5 +1,4 @@
 #include <stdio.h>
-
 #include <ctype.h>
 #include <stdlib.h>
 #include <sys/types.h>        
@@ -76,6 +75,7 @@ int main(int argc,char*argv[]){
 		//read
 		puts("hiya");
 		/*--On tue le service*/
+                close(tmp_services);
 		exit(0);
 		default:
 		/*--On ferme le service inutile dans le père*/
@@ -83,6 +83,6 @@ int main(int argc,char*argv[]){
 		}
 	}
 
-
+        close(id_socket_ecoute);
 	exit(0);
 }
