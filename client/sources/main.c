@@ -17,7 +17,7 @@ void erreur(char *p_fonction){
 }
 
 void usage(char *p_nom_programme){
-	fprintf(stderr,"%s prend 2 paramètres, <nomserveur> <numeroport>\n", p_nom_programme);
+	fprintf(stderr,"%s prend 2 paramètres, <nomserveur> <numeroport>\n le nom du serveur doit commencer par a-z ou A-Z.\n le numero de port doit etre entier\n", p_nom_programme);
 	exit(-1);
 }
 
@@ -26,9 +26,13 @@ int main(int argc, char*argv[]){
     struct hostent *ip_serveur;
     int id_socket_ecriture;
     /*récupération sur la ligne de cmd*/
+if(argc!=3) usage(argv[0]);
     const char* NOM_SERV = argv[1];
     const int PORT_SOURCE = atoi(argv[2]);
 
+    /*on regarde si les choses passé en argument ont un minimum de cohérence*/
+    if((NOM_SERV[0]<'A' && NOM_SERV[0]>'Z') || (NOM_SERV[0]<'a' && NOM_SERV[0]>'z')|| PORT_SOURCE==0) usage(argv[0]);
+    
     /*Création de la socket qui va nous permettre d'écrire*/
     id_socket_ecriture=socket(AF_INET, SOCK_STREAM, 0);
     if(id_socket_ecriture==-1) erreur("socket");
