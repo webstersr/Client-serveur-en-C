@@ -21,6 +21,8 @@ void usage(char *p_nom_programme){
 	exit(-1);
 }
 
+void fct_client(int p_socket);
+
 int main(int argc, char*argv[]){
     struct sockaddr_in adresse_serveur;
     struct hostent *ip_serveur;
@@ -45,10 +47,13 @@ if(argc!=3) usage(argv[0]);
     
     /*connexion au serveur*/
     if(connect(id_socket_ecriture, (struct sockaddr *)&adresse_serveur,sizeof(struct sockaddr_in))==-1) erreur("connect");
-    /*nous sommes connectés, traitement*/
-    write(id_socket_ecriture,"lol",3);
-
+    /*nous sommes connecté, traitement*/
+    fct_client(id_socket_ecriture);
     /*on ferme la socket desormais inutile*/
     close(id_socket_ecriture);
     exit(0);
+}
+
+void fct_client(int p_socket){
+    write(p_socket,"Je me présente je m'appel Henry, je voudrais bien réussir ma vie...",sizeof("Je me présente je m'appel Henry, je voudrais bien réussir ma vie..."));
 }

@@ -25,6 +25,8 @@ void usage(char *p_nom_programme){
 	exit(-1);
 }
 
+void fct_serveur(int p_socket);
+
 int main(int argc,char*argv[]){
 
     /*Si il n'y a pas qu'un et unique argument on appel la fonction usage*/
@@ -35,7 +37,7 @@ int main(int argc,char*argv[]){
         unsigned int *taille_adresse_client = (unsigned int*)malloc(sizeof(unsigned int));
 	struct sigaction gestion_signal;
 	struct sockaddr_in adresse_serveur, adresse_client;
-
+                
 	
 	*taille_adresse_client = sizeof(struct sockaddr_in);
 
@@ -71,9 +73,9 @@ int main(int argc,char*argv[]){
 		case 0:
 		/*Connexion réussie, traitement des demandes client*/
 		/*--On ferme la socket d'écoute inutile dans le processus fils*/
-		close(id_socket_ecoute);
-		//read
-		puts("hiya");
+                    close(id_socket_ecoute);
+                /*--Traitements du serveur*/
+                    fct_serveur(tmp_services);
 		/*--On tue le service*/
                 close(tmp_services);
 		exit(0);
@@ -85,4 +87,10 @@ int main(int argc,char*argv[]){
 
         close(id_socket_ecoute);
 	exit(0);
+}
+
+void fct_serveur(int p_socket){
+    char requete[512];
+    read(p_socket,requete,512);
+    puts(requete);
 }
