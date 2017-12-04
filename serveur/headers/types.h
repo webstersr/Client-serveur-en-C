@@ -1,6 +1,6 @@
 #ifndef TYPES_H
 #define TYPES_H
-
+//u
 // Structure pour les codes promos
 typedef enum CodePromo CodePromo;
 enum CodePromo {
