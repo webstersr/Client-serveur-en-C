@@ -1,50 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-//Util pour traiter les lignes du fichier
 #include <string.h>
-#include <assert.h>
-
-// Structure pour les codes promos
-typedef enum CodePromo CodePromo;
-enum CodePromo {
-    REDUC,SUPPL,DEFAULT
-};
-
-// Structure de l'heure de voyage
-typedef struct {
-    int heure;
-    int minute;
-}horaire;
-
-// Structure du voyage
-typedef struct{
-    int numero_train;
-    char* ville_depart;
-    char* ville_arrive;
-    horaire heure_depart;
-    horaire heure_arrive;
-    double prix;
-    CodePromo code_promo;
-
-}voyage;
-
-
-// Tableau contenant la liste des voyages
-struct TableauVoyage{
-    voyage v;
-    struct TableauVoyage* suivant;
-};
-typedef struct TableauVoyage TableauVoyage;
-
-
-void afficher_table(TableauVoyage *tableauVoyage);
-TableauVoyage* remplir_tableau_voyage(TableauVoyage *pTableau_voyage);
-voyage * creer_voyage(int pNumero_train, char* pVoyageille_depart, char* pVoyageille_arrive, horaire pHeure_depart, horaire pHeure_arrive, double pPrix, CodePromo pCode_promo);
-horaire *creer_horaire(int pHeure, int pMinute);
-TableauVoyage* ajouter_voyage(TableauVoyage *pTab_v, voyage* pVoyage);
-char** diviseur_chaine(char* pChaine, const char pDelimiteur);
-TableauVoyage* remplir_tableau_voyage(TableauVoyage *pTableau_voyage);
-
+#include "fonctions.h"
+#include <sys/wait.h>
+#include <errno.h>
 
 /**
  * La méthode lis le fichier, et remplis le tableau passé en parametre
@@ -66,9 +25,9 @@ TableauVoyage* remplir_tableau_voyage(TableauVoyage *pTableau_voyage){
     enum CodePromo tmpCodePromo;
     
 /*On ouvre le fichier*/
-    tmp_fichier = fopen("Trains.txt", "r");
+    tmp_fichier = fopen("../sources/Trains.txt", "r");
     if (tmp_fichier == NULL){
-        fprintf(stderr,"ERREUR OUVERTURE IMPOSSIBLE DU FICHIER");
+        fprintf(stderr,"ERREUR OUVERTURE IMPOSSIBLE DU FICHIER/n");
 	exit(EXIT_FAILURE);
     }
     
@@ -222,13 +181,16 @@ void afficher_table(TableauVoyage *tableauVoyage){
     }
 }
 
-
-int main(){
-    TableauVoyage *tmpTableau=NULL;
-    /* TODO :: Ajouter le tableau tmpTableau*/
-    tmpTableau=remplir_tableau_voyage(tmpTableau);
-    afficher_table(tmpTableau);
-
+void mort_fils(){
+	wait(NULL);
 }
 
+void erreur(char *p_fonction){
+	perror(p_fonction);
+	exit(errno);
+}
 
+void usage(char *p_nom_programme){
+	fprintf(stderr,"%s prend 1 paramètre, c'est le numéro de port que prendra la socket du serveur\n", p_nom_programme);
+	exit(-1);
+}
