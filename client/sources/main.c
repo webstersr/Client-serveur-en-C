@@ -11,22 +11,32 @@
 #include <netinet/in.h>
 #include <netdb.h>
 
-void erreur(char *p_fonction){
-	perror(p_fonction);
+/**
+ * La fonction renvoie l'erreur passé en parametre
+ * @param {char*} *pFonction : Erreur à renvoyer
+ * return void
+ */
+void erreur(char *pFonction){
+	perror(pFonction);
 	exit(errno);
 }
 
-void usage(char *p_nom_programme){
-	fprintf(stderr,"%s prend 2 paramètres, <nomserveur> <numeroport>\n le nom du serveur doit commencer par a-z ou A-Z.\n le numero de port doit etre entier\n", p_nom_programme);
+/**
+ * La fonction ecrit un message d'erreur en cas de parametre incorrect
+ * @param {char*} *pNomProgramme : Nom du programme
+ * return void
+ */
+void usage(char *pNomProgramme){
+	fprintf(stderr,"%s prend 2 paramètres, <nomserveur> <numeroport>\n le nom du serveur doit commencer par a-z ou A-Z.\n le numero de port doit etre entier\n", pNomProgramme);
 	exit(-1);
 }
 
-void fct_client(int p_socket);
+void envoie_requete_serveur(int pSocket);
 
 int main(int argc, char*argv[]){
-    struct sockaddr_in adresse_serveur;
-    struct hostent *ip_serveur;
-    int id_socket_ecriture;
+    struct sockaddr_in tmpAdresseServeur;
+    struct hostent *tmpIpServeur;
+    int tmpIdSocketEcriture;
     /*récupération sur la ligne de cmd*/
 if(argc!=3) usage(argv[0]);
     const char* NOM_SERV = argv[1];
@@ -36,24 +46,29 @@ if(argc!=3) usage(argv[0]);
     if((NOM_SERV[0]<'A' && NOM_SERV[0]>'Z') || (NOM_SERV[0]<'a' && NOM_SERV[0]>'z')|| PORT_SOURCE==0) usage(argv[0]);
     
     /*Création de la socket qui va nous permettre d'écrire*/
-    id_socket_ecriture=socket(AF_INET, SOCK_STREAM, 0);
-    if(id_socket_ecriture==-1) erreur("socket");
+    tmpIdSocketEcriture=socket(AF_INET, SOCK_STREAM, 0);
+    if(tmpIdSocketEcriture==-1) erreur("socket");
     
     /*configuration pour la liaison adresse du serveur et socket client*/
-    adresse_serveur.sin_family = AF_INET;
-    adresse_serveur.sin_port = htons(PORT_SOURCE);
-    ip_serveur=gethostbyname(NOM_SERV);
-    memcpy(&adresse_serveur.sin_addr.s_addr,ip_serveur->h_addr,ip_serveur->h_length);
+    tmpAdresseServeur.sin_family = AF_INET;
+    tmpAdresseServeur.sin_port = htons(PORT_SOURCE);
+    tmpIpServeur=gethostbyname(NOM_SERV);
+    memcpy(&tmpAdresseServeur.sin_addr.s_addr,tmpIpServeur->h_addr,tmpIpServeur->h_length);
     
     /*connexion au serveur*/
-    if(connect(id_socket_ecriture, (struct sockaddr *)&adresse_serveur,sizeof(struct sockaddr_in))==-1) erreur("connect");
+    if(connect(tmpIdSocketEcriture, (struct sockaddr *)&tmpAdresseServeur,sizeof(struct sockaddr_in))==-1) erreur("connect");
     /*nous sommes connecté, traitement*/
-    fct_client(id_socket_ecriture);
+    envoie_requete_serveur(tmpIdSocketEcriture);
     /*on ferme la socket desormais inutile*/
-    close(id_socket_ecriture);
+    close(tmpIdSocketEcriture);
     exit(0);
 }
 
-void fct_client(int p_socket){
-    write(p_socket,"Je me présente je m'appel Henry, je voudrais bien réussir ma vie...",sizeof("Je me présente je m'appel Henry, je voudrais bien réussir ma vie..."));
+/**
+ * La fonction ecrit des données pour le serveur
+ * @param {int} pSocket : Socket d'ecoute du serveur
+ * @return void
+ */
+void envoie_requete_serveur(int pSocket){
+    write(pSocket,"Je me présente je m'appel Henry, je voudrais bien réussir ma vie...",sizeof("Je me présente je m'appel Henry, je voudrais bien réussir ma vie..."));
 }
