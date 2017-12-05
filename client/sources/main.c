@@ -70,6 +70,15 @@ if(argc!=3) usage(argv[0]);
  * @return void
  */
 void envoie_requete_serveur(int pSocket){
-	//Ecrire un while pour le buffer pour qu'il transmete tout le message    
-	write(pSocket,"Je me présente je m'appel Henry, je voudrais bien réussir ma vie...",sizeof("Je me présente je m'appel Henry, je voudrais bien réussir ma vie..."));
+	//Ecrire un while pour le buffer pour qu'il transmete tout le message   
+	char* tmpMessage = "Je me présente je m'appel Heny, je voudrais bien réussir ma vie... SALUT JIMMY"; 
+	int* tmpTailleBuffer = (int*)malloc(sizeof(int));
+        *tmpTailleBuffer = strlen(tmpMessage);
+	//On envoie la taille du paquet
+	write(pSocket,tmpTailleBuffer,sizeof(int));
+	//On envoie le paquet	
+	write(pSocket,tmpMessage,*tmpTailleBuffer);
+	
+	
 }
+  

@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 #include <sys/wait.h>
+#include <string.h>
 #include "fonctions.h"
 
 #define MAX_CONNEXION_SIM 5
@@ -62,8 +63,8 @@ int main(int argc,char*argv[]){
 	if(tmpServices == -1) erreur("accept");
 
         /*Parsage et instanciation de la base de données*/
-        tmpTableau=remplir_tableau_voyage(tmpTableau);
-        
+        /*tmpTableau=remplir_tableau_voyage(tmpTableau);
+        sleep(3);*/
         
         /*Propagation de celle-ci dans les fils*/
 	switch(fork()){
@@ -96,10 +97,12 @@ int main(int argc,char*argv[]){
  * @return void
  */
 void traitement_tmpRequete_client(int pSocket, TableauVoyage *pTableau){
-    char tmpRequete[TAMPON_TAILLE_MAX];
-    
-    read(pSocket,tmpRequete,TAMPON_TAILLE_MAX);
-    puts("Requete du serveur");
-    puts(tmpRequete);
-    afficher_table(pTableau);
+    int *taille_tampon=(int*)malloc(sizeof(int));
+    read(pSocket,taille_tampon,sizeof(int));
+    char tmpRequete[*taille_tampon];
+
+    read(pSocket,tmpRequete,*taille_tampon);
+	    puts("Requete du serveur");
+	    puts(tmpRequete);
+   // afficher_table(pTableau);
 }
