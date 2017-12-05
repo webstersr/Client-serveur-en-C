@@ -4,28 +4,16 @@
 #include <sys/types.h>        
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <sys/wait.h>
-#include <errno.h>
 #include <unistd.h>
 #include <netinet/in.h>
+#include <sys/wait.h>
+#include "fonctions.h"
 
 #define MAX_CONNEXION_SIM 5
+#define TAMPON_TAILLE_MAX 512
 
-void mort_fils(){
-	wait(NULL);
-}
 
-void erreur(char *p_fonction){
-	perror(p_fonction);
-	exit(errno);
-}
-
-void usage(char *p_nom_programme){
-	fprintf(stderr,"%s prend 1 paramètre, c'est le numéro de port que prendra la socket du serveur\n", p_nom_programme);
-	exit(-1);
-}
-
-void fct_serveur(int p_socket);
+void fct_serveur(int p_socket, TableauVoyage *pTableau);
 
 int main(int argc,char*argv[]){
 
@@ -37,6 +25,7 @@ int main(int argc,char*argv[]){
         unsigned int *taille_adresse_client = (unsigned int*)malloc(sizeof(unsigned int));
 	struct sigaction gestion_signal;
 	struct sockaddr_in adresse_serveur, adresse_client;
+        TableauVoyage *tmpTableau=NULL;
                 
 	
 	*taille_adresse_client = sizeof(struct sockaddr_in);
@@ -67,6 +56,11 @@ int main(int argc,char*argv[]){
 	tmp_services = accept(id_socket_ecoute, (struct sockaddr *)&adresse_client, taille_adresse_client);
 	if(tmp_services == -1) erreur("accept");
 
+        /*Parsage et instanciation de la base de données*/
+        tmpTableau=remplir_tableau_voyage(tmpTableau);
+        
+        
+        /*Propagation de celle-ci dans les fils*/
 	switch(fork()){
 		case -1:
 		erreur("fork");
@@ -75,7 +69,7 @@ int main(int argc,char*argv[]){
 		/*--On ferme la socket d'écoute inutile dans le processus fils*/
                     close(id_socket_ecoute);
                 /*--Traitements du serveur*/
-                    fct_serveur(tmp_services);
+                    fct_serveur(tmp_services,tmpTableau);
 		/*--On tue le service*/
                 close(tmp_services);
 		exit(0);
@@ -89,8 +83,10 @@ int main(int argc,char*argv[]){
 	exit(0);
 }
 
-void fct_serveur(int p_socket){
-    char requete[512];
-    read(p_socket,requete,512);
+void fct_serveur(int p_socket, TableauVoyage *pTableau){
+    char requete[TAMPON_TAILLE_MAX];
+    read(p_socket,requete,TAMPON_TAILLE_MAX);
+    puts("requete du serveur");
     puts(requete);
+    afficher_table(pTableau);
 }
