@@ -16,6 +16,6 @@ char** diviseur_chaine(char* pChaine, const char pDelimiteur);
 void afficher_table(TableauVoyage *tableauVoyage);
 void usage(char *p_nom_programme);
 void erreur(char *p_fonction);
-void mort_fils();
+void recupere_mort_fils();
 
 #endif

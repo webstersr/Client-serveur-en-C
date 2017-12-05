@@ -185,7 +185,7 @@ void afficher_table(TableauVoyage *tableauVoyage){
     }
 }
 
-void mort_fils(){
+void recupere_mort_fils(){
 	wait(NULL);
 }
 
