@@ -70,5 +70,6 @@ if(argc!=3) usage(argv[0]);
  * @return void
  */
 void envoie_requete_serveur(int pSocket){
-    write(pSocket,"Je me présente je m'appel Henry, je voudrais bien réussir ma vie...",sizeof("Je me présente je m'appel Henry, je voudrais bien réussir ma vie..."));
+	//Ecrire un while pour le buffer pour qu'il transmete tout le message    
+	write(pSocket,"Je me présente je m'appel Henry, je voudrais bien réussir ma vie...",sizeof("Je me présente je m'appel Henry, je voudrais bien réussir ma vie..."));
 }

@@ -97,6 +97,7 @@ int main(int argc,char*argv[]){
  */
 void traitement_tmpRequete_client(int pSocket, TableauVoyage *pTableau){
     char tmpRequete[TAMPON_TAILLE_MAX];
+    
     read(pSocket,tmpRequete,TAMPON_TAILLE_MAX);
     puts("Requete du serveur");
     puts(tmpRequete);
