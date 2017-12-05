@@ -25,9 +25,13 @@ TableauVoyage* remplir_tableau_voyage(TableauVoyage *pTableau_voyage){
     enum CodePromo tmpCodePromo;
     
 /*On ouvre le fichier*/
+    #ifdef TEST
+    tmp_fichier = fopen("../Trains.txt", "r");
+    #else
     tmp_fichier = fopen("../sources/Trains.txt", "r");
+    #endif
     if (tmp_fichier == NULL){
-        fprintf(stderr,"ERREUR OUVERTURE IMPOSSIBLE DU FICHIER/n");
+        fprintf(stderr,"ERREUR OUVERTURE IMPOSSIBLE DU FICHIER\n");
 	exit(EXIT_FAILURE);
     }
     
