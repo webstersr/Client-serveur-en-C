@@ -11,8 +11,6 @@ all: $(EXEC)
 
 #on utilise la regle implicite .c.o
 $(EXEC):
-	echo "git kill"
-	rm -rf $(XRC) $(HDR)
 
 $(EXE): $(BIN)
 	$(CC) $(BIN) -o $(EXEC)
